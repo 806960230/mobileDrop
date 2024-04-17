@@ -1,6 +1,7 @@
 import {
   NumberKeyboard, PasscodeInput, Popup, Toast,
 } from 'antd-mobile';
+import { useTranslation } from 'react-i18next';
 import { useMockOrder } from '@/services/order';
 import style from './index.module.less';
 
@@ -24,6 +25,7 @@ const WxPay = ({
   onFinish,
 }: IProps) => {
   const { get } = useMockOrder();
+  const { t } = useTranslation();
   const onChangeHandler = async (value: string) => {
     if (value.length > 5) {
       const res = await get(
@@ -52,14 +54,15 @@ const WxPay = ({
       onMaskClick={() => {
         onClose();
       }}
+      onClose={onClose}
       bodyStyle={{
         borderTopLeftRadius: '8px',
         borderTopRightRadius: '8px',
       }}
     >
       <div className={style.container}>
-        <div className={style.title}>请输入支付密码</div>
-        <div className={style.desc}>黑石支付服务平台</div>
+        <div className={style.title}>{t('inputPayPS')}</div>
+        <div className={style.desc}>{t('loveServer')}</div>
         <div className={style.amount}>
           ¥
           {amount}

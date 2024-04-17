@@ -1,8 +1,10 @@
 import {
   Button, Divider, Selector, Tabs, Toast,
 } from 'antd-mobile';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import { DataContext } from '@/context';
 import { useSchedulesByCourse, useSubscribeCourse } from '@/services/schedule';
 import { getWeekZh } from '@/utils';
 import { useUseCards } from '@/services/card';
@@ -24,16 +26,18 @@ const SubscribePopup = ({
 }: IProps) => {
   const { data } = useSchedulesByCourse(courseId);
   const { data: cards } = useUseCards(courseId);
+  const { locale } = useContext(DataContext);
   const [selectSchedule, setSelectSchedule] = useState<string[]>([]);
   const [selectCard, setSelectCard] = useState<string[]>([]);
   const { subscribe, loading } = useSubscribeCourse();
-
+  const { t } = useTranslation();
   const weeks = useMemo(() => {
     const w = [];
     // 循环出未来的七天，按照周一，周二
     for (let i = 1; i < 8; i += 1) {
       const day = dayjs().add(i, 'day');
-      const week = getWeekZh(day.format('dddd'));
+      // 要语言转换
+      const week = locale === 'en' ? (day.format('dddd')) : getWeekZh(day.format('dddd'));
       const times = data?.filter((item) => day.isSame(item.schoolDay, 'day'));
       const orderTimes = times?.map((time) => ({
         label: `${time.startTime.slice(0, 5)}-${time.endTime.slice(0, 5)}`,
@@ -57,7 +61,7 @@ const SubscribePopup = ({
   const subscribeHandler = async () => {
     if (selectSchedule.length === 0 || selectCard.length === 0) {
       Toast.show({
-        content: '请选择对应的上课时间和消费卡',
+        content: t('chooseTimeAndCard'),
       });
       return;
     }
@@ -75,7 +79,7 @@ const SubscribePopup = ({
   };
   return (
     <div className={style.container}>
-      <Divider>请选择预约时间</Divider>
+      <Divider>{t('chooseTime')}</Divider>
       <Tabs>
         {weeks.map((week) => (
           <Tabs.Tab title={week.weekLabel} key={week.weekValue}>
@@ -87,7 +91,7 @@ const SubscribePopup = ({
           </Tabs.Tab>
         ))}
       </Tabs>
-      <Divider>请选择消费卡</Divider>
+      <Divider>{t('chooseCard')}</Divider>
       <Selector
         columns={1}
         onChange={(arr) => setSelectCard(arr)}
@@ -100,7 +104,7 @@ const SubscribePopup = ({
         className={style.button}
         onClick={subscribeHandler}
       >
-        立即预约
+        {t('reserveNow')}
       </Button>
     </div>
   );

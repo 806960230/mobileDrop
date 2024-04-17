@@ -1,5 +1,6 @@
 import { ResultPage } from 'antd-mobile';
 import { AlipayCircleFill } from 'antd-mobile-icons';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   price: number;
@@ -9,29 +10,32 @@ interface IProps {
 const FailResult = ({
   price,
   orgName,
-}: IProps) => (
-  <ResultPage
-    status="warning"
-    title={<div style={{ fontSize: 15 }}>支付失败</div>}
-    description={(
-      <>
-        <span style={{ fontSize: 32, color: '#ffffff', marginRight: 4 }}>
-          ¥
-        </span>
-        <span style={{ fontSize: 48, color: '#ffffff' }}>{price}</span>
-      </>
+}: IProps) => {
+  const { t } = useTranslation();
+  return (
+    <ResultPage
+      status="warning"
+      title={<div style={{ fontSize: 15 }}>支付失败</div>}
+      description={(
+        <>
+          <span style={{ fontSize: 32, color: '#ffffff', marginRight: 4 }}>
+            ¥
+          </span>
+          <span style={{ fontSize: 48, color: '#ffffff' }}>{price}</span>
+        </>
       )}
-    icon={<AlipayCircleFill />}
-    details={[
-      {
-        label: orgName,
-        value: `¥ ${price}`,
-        bold: true,
-      },
-    ]}
-    onPrimaryButtonClick={() => window.location.reload()}
-    primaryButtonText="重新支付"
-  />
-);
+      icon={<AlipayCircleFill />}
+      details={[
+        {
+          label: orgName,
+          value: `¥ ${price}`,
+          bold: true,
+        },
+      ]}
+      onPrimaryButtonClick={() => window.location.reload()}
+      primaryButtonText={t('repay')}
+    />
+  );
+};
 
 export default FailResult;

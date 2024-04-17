@@ -3,6 +3,7 @@ import {
   Card, Grid, Image, Result,
 } from 'antd-mobile';
 import { useGoTo } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 import { ROUTE_KEY } from '@/routes/menus';
 import style from './index.module.less';
 
@@ -18,7 +19,7 @@ const RecommendProducts = ({
 }: IProps) => {
   const data = useProductsByOrgId(orgId);
   const { go } = useGoTo();
-
+  const { t } = useTranslation();
   const goToProduct = (productId: string) => {
     go(ROUTE_KEY.PRODUCT_INFO, { id: productId });
   };
@@ -26,13 +27,13 @@ const RecommendProducts = ({
     return (
       <Result
         status="warning"
-        title="提示"
-        description="没有推荐的课程"
+        title={t('prompt')}
+        description={t('noRecommend')}
       />
     );
   }
   return (
-    <Card title="推荐课程" className={style.container}>
+    <Card title={t('recommendCourses')} className={style.container}>
       {
         data.map((item) => (
           <div key={item.id} onClick={() => goToProduct(item.id)}>
@@ -43,7 +44,7 @@ const RecommendProducts = ({
               <Grid.Item span={2}>
                 <Image
                   src={item.coverUrl}
-                  alt="课程图片"
+                  alt={t('ImageCourse')}
                   className={style.img}
                 />
               </Grid.Item>
@@ -54,14 +55,15 @@ const RecommendProducts = ({
                 <div className={style.desc}>
                   <span className={style.descContent}>
                     {
-                    item.desc
-                  }
+                      item.desc
+                    }
                   </span>
                   <span className={style.count}>
-                    已售&nbsp;
+                    {t('sold')}
+                    &nbsp;
                     {
-                    item.buyNumber || 0
-                  }
+                      item.buyNumber || 0
+                    }
                   </span>
                 </div>
               </Grid.Item>

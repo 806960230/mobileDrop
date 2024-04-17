@@ -1,9 +1,13 @@
 import {
-  Button, Form, Input, Space,
+  Button, Form, Image, Input, Space,
 } from 'antd-mobile';
 import { useMutation } from '@apollo/client';
+import { useContext } from 'react';
+import { DataContext } from '@/context';
 import { Link, useNavigate } from 'react-router-dom';
 import md5 from 'md5';
+import { useTranslation } from 'react-i18next';
+import { debounce } from 'lodash';
 import { STUDENT_REGISTER } from '../../graphql/user';
 import { showFail, showSuccess } from '../../utils';
 import style from './index.module.less';
@@ -18,7 +22,25 @@ interface IValue {
 const Register = () => {
   const [form] = Form.useForm();
   const [register, { loading }] = useMutation(STUDENT_REGISTER);
+  const { locale, setLocale } = useContext(DataContext);
+  const { t, i18n } = useTranslation();
   const nav = useNavigate();
+
+  const changeLan = () => {
+    let language;
+    if (!localStorage.getItem('i18nextLng') || localStorage.getItem('i18nextLng') === 'en') {
+      localStorage.setItem('i18nextLng', 'ch');
+      language = 'ch';
+    } else {
+      localStorage.setItem('i18nextLng', 'en');
+      language = 'en';
+      setLocale(language);
+    }
+    i18n.changeLanguage(language);
+    setLocale(language);
+  };
+
+  const debouncedAction = debounce(changeLan, 250);
 
   const onRegisterHandler = async (values: IValue) => {
     const res = await register({
@@ -28,7 +50,7 @@ const Register = () => {
       },
     });
     if (res.data.studentRegister.code === 200) {
-      showSuccess(res.data.studentRegister.message);
+      showSuccess(locale === 'en' ? 'Register successfully' : res.data.studentRegister.message);
       nav('/login');
       return;
     }
@@ -38,7 +60,9 @@ const Register = () => {
   return (
     <div className={style.container}>
       <div className={style.logo}>
-        <img src="https://water-drop-assets.oss-cn-hangzhou.aliyuncs.com/images/henglogo.png" alt="" />
+        <Image src="https://water-drop-gan.oss-cn-hongkong.aliyuncs.com/images/newfont.png" className={style.font} />
+        <Image src="https://water-drop-gan.oss-cn-hongkong.aliyuncs.com/images/read2.png" className={style.themePic} />
+        <Button onClick={debouncedAction} color="warning">{t('changeLanguage')}</Button>
       </div>
       <Form
         form={form}
@@ -46,36 +70,36 @@ const Register = () => {
         onFinish={onRegisterHandler}
         footer={(
           <Button loading={loading} block type="submit" color="primary" size="large">
-            注册
+            {t('register')}
           </Button>
         )}
       >
         <Form.Item
           rules={[{
             required: true,
-            message: '用户名不能为空',
+            message: t('noAllowedAccountNull'),
           }, {
             pattern: /^(?![0-9]+$)(?![a-z]+$)[a-z0-9]{6,10}$/,
-            message: '有且只能包含小写字母和数字，长度大于 6，小于 10',
+            message: t('accountRule'),
           }]}
-          label="用户名"
+          label={t('account')}
           name="account"
         >
-          <Input placeholder="请输入用户名" clearable />
+          <Input placeholder={t('inputAccount')} clearable />
         </Form.Item>
         <Form.Item
-          label="输入密码"
+          label={t('password')}
           name="password"
           rules={[{
             required: true,
-            message: '密码不能为空',
+            message: t('noAllowedPSNull'),
           }, {
             pattern: /^(?![0-9]+$)(?![a-z]+$)[a-z0-9]{6,}$/,
-            message: '有且只能包含小写字母和数字，长度大于 6',
+            message: t('passwordRule'),
           }]}
         >
           <Input
-            placeholder="请输入密码"
+            placeholder={t('inputPS')}
             clearable
             type="password"
           />
@@ -83,10 +107,10 @@ const Register = () => {
         <Form.Item
           rules={[{
             required: true,
-            message: '密码不能为空',
+            message: t('noAllowedPSNull'),
           }, {
             pattern: /^(?![0-9]+$)(?![a-z]+$)[a-z0-9]{6,}$/,
-            message: '有且只能包含小写字母和数字，长度大于 6',
+            message: t('passwordRule'),
           }, {
             validator: (_, value) => {
               const password = form.getFieldValue('password');
@@ -95,22 +119,22 @@ const Register = () => {
               }
               return Promise.reject();
             },
-            message: '两次输入的密码需要一致',
+            message: t('correspondingPS'),
           }]}
-          label="确认密码"
+          label={t('confirmPS')}
           name="passwordConfirm"
         >
           <Input
-            placeholder="请再次输入密码"
+            placeholder={t('inputConfirmPS')}
             clearable
             type="password"
           />
         </Form.Item>
       </Form>
-      <div>
-        <Space>
-          有账号？去
-          <Link to="/login">登录</Link>
+      <div style={{ textAlign: 'center' }}>
+        <Space justify="center">
+          {t('haveAccount')}
+          <Link to="/login">{t('login')}</Link>
         </Space>
       </div>
     </div>

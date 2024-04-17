@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDownLoad } from './hooks';
 import style from './index.module.less';
 
@@ -13,13 +14,14 @@ const InfiniteScroll = ({
   hasMore,
   loadMore,
 }: IProps) => {
+  const { t } = useTranslation();
   const { tips } = useDownLoad({
     hasMore,
     loadMore,
   });
   return (
     <div className={style.container}>
-      {hasMore ? tips : '没有更多数据了'}
+      {hasMore ? tips : t('noMore')}
     </div>
   );
 };

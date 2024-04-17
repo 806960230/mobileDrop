@@ -1,5 +1,6 @@
 import { Button, Image, List } from 'antd-mobile';
 import { ICourse, ITeacher } from '@/utils/types';
+import { useTranslation } from 'react-i18next';
 import style from './index.module.less';
 
 interface IProps {
@@ -13,41 +14,44 @@ interface IProps {
 const CourseList = ({
   dataSource,
   onSubscribe,
-}: IProps) => (
-  <div className={style.container}>
-    <List>
-      {dataSource.map((item) => (
-        <List.Item
-          key={item.id}
-          prefix={
-            (
-              <Image
-                src={item.coverUrl}
-                alt="课程图片"
-                className={style.coverUrl}
-              />
-            )
-          }
-          extra={
-            (
-              <Button
-                fill="none"
-                color="primary"
-                onClick={() => onSubscribe(item.id)}
-              >
-                预约
-              </Button>
-            )
-          }
-          description={
-            item.teachers?.map((it: ITeacher) => it.name).join('，')
+}: IProps) => {
+  const { t } = useTranslation();
+  return (
+    <div className={style.container}>
+      <List>
+        {dataSource.map((item) => (
+          <List.Item
+            key={item.id}
+            prefix={
+              (
+                <Image
+                  src={item.coverUrl}
+                  alt={t('ImageCourse')}
+                  className={style.coverUrl}
+                />
+              )
             }
-        >
-          {item.name}
-        </List.Item>
-      ))}
-    </List>
-  </div>
-);
+            extra={
+              (
+                <Button
+                  fill="none"
+                  color="primary"
+                  onClick={() => onSubscribe(item.id)}
+                >
+                  {t('reserve')}
+                </Button>
+              )
+            }
+            description={
+              item.teachers?.map((it: ITeacher) => it.name).join('，')
+              }
+          >
+            {item.name}
+          </List.Item>
+        ))}
+      </List>
+    </div>
+  );
+};
 
 export default CourseList;

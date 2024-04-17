@@ -1,22 +1,23 @@
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-
+import { useTranslation } from 'react-i18next';
 const OFFSET = 90;
 
 export const useDownLoad = ({
   hasMore = false,
-  loadMore = () => {},
+  loadMore = () => { },
 }) => {
-  const [tips, setTips] = useState('');
 
+  const [tips, setTips] = useState('');
+  const { t } = useTranslation();
   useEffect(() => {
     window.onscroll = _.debounce(async () => {
       const { clientHeight, scrollTop } = document.documentElement;
       const { scrollHeight } = document.body;
       if (hasMore && (scrollTop + clientHeight >= scrollHeight - OFFSET)) {
-        setTips('加载中...');
+        setTips(t('loading'));
         await loadMore();
-        setTips('加载完成');
+        setTips(t('loaded'));
         setTimeout(() => {
           setTips('');
         }, 1000);

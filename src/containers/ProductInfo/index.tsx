@@ -4,10 +4,11 @@ import { TCourse } from '@/utils/types';
 import { useMemo } from 'react';
 import Hr from '@/components/Hr';
 import { Result } from 'antd-mobile';
-import style from './index.module.less';
+import { useTranslation } from 'react-i18next';
 import BaseInfo from './components/BaseInfo';
 import CourseInfo from './components/CourseInfo';
 import BuyBottom from './components/BuyBottom';
+import style from './index.module.less';
 
 /**
 * 商品详情
@@ -15,6 +16,7 @@ import BuyBottom from './components/BuyBottom';
 const ProductInfo = () => {
   const { id } = useParams();
   const { data } = useProductInfo(id || '');
+  const { t } = useTranslation();
   const courses = useMemo(() => {
     const cs: Record<string, TCourse> = {};
     data?.cards?.forEach((item) => {
@@ -30,8 +32,8 @@ const ProductInfo = () => {
     return (
       <Result
         status="warning"
-        title="提示"
-        description="没有该商品信息"
+        title={t('prompt')}
+        description={t('noProduct')}
       />
     );
   }

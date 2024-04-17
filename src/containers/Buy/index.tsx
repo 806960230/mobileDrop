@@ -5,6 +5,7 @@ import { Grid, Stepper, Toast } from 'antd-mobile';
 import { useState } from 'react';
 import { useUserContext } from '@/hooks/userHooks';
 import { useWxpayConfig } from '@/services/order';
+import { useTranslation } from 'react-i18next';
 import { DISABLE_DEV } from '@/utils/constants';
 import { uniqueId } from 'lodash';
 import WxPay from '@/components/WxPay';
@@ -28,6 +29,7 @@ const Buy = () => {
   const { store, setStore } = useUserContext();
   const { getWxConfig } = useWxpayConfig();
   const [openPay, setOpenPay] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const buyHandler = async () => {
     // 调试状态下，直接吊起模拟微信支付
@@ -46,7 +48,7 @@ const Buy = () => {
 
     if (!data || !id) {
       Toast.show({
-        content: '没有获取到商品信息',
+        content: t('noGetPro'),
       });
       return;
     }
@@ -82,7 +84,7 @@ const Buy = () => {
       );
     } else {
       Toast.show({
-        content: '请在微信中打开该页面',
+        content: t('openInWeChat'),
       });
     }
   };
@@ -157,7 +159,7 @@ const Buy = () => {
       </div>
       <Hr />
       <div className={style.count}>
-        购买数量
+        {t('purchaseNum')}
         <Stepper
           className={style.step}
           value={count}
@@ -167,7 +169,8 @@ const Buy = () => {
         />
       </div>
       <div className={style.price}>
-        小计: ￥
+        {t('totalPrice')}
+        : ￥
         {data.preferentialPrice * count}
         <span className={style.originalPrice}>
           ￥
@@ -177,7 +180,7 @@ const Buy = () => {
       <Hr />
       <div className={style.user}>
         <span className={style.telLabel}>
-          手机号
+          {t('phoneNum')}
         </span>
         <span className={style.tel}>
           {store.tel}
@@ -202,7 +205,7 @@ const Buy = () => {
           className={style.buyButton}
           onClick={buyHandler}
         >
-          {store.openid ? '提交订单' : '去微信授权'}
+          {store.openid ? t('submitOrder') : t('authorize on WeChat')}
         </Grid.Item>
       </Grid>
     </div>

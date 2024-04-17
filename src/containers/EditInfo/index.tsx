@@ -1,13 +1,15 @@
 import { useMutation } from '@apollo/client';
 import {
-  Button, Form, Input, ImageUploader,
+  Button, Form, Input, ImageUploader, Image,
 } from 'antd-mobile';
 import classNames from 'classnames';
 import { useUploadOSS } from '@/hooks/useUploadOSS';
 import { COMMIT_STUDENT_INFO } from '@/graphql/user';
+import { DataContext } from '@/context';
+import { useTranslation } from 'react-i18next';
 import { IStudent } from '@/utils/types';
 import { showFail, showSuccess } from '@/utils';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useUserContext } from '@/hooks/userHooks';
 import style from './index.module.less';
 
@@ -16,9 +18,11 @@ import style from './index.module.less';
  */
 const EditInfo = () => {
   const uploadHandler = useUploadOSS();
+  const { locale } = useContext(DataContext);
   const [commit] = useMutation(COMMIT_STUDENT_INFO);
   const [form] = Form.useForm();
   const { store } = useUserContext();
+  const { t } = useTranslation();
   useEffect(() => {
     if (!store.tel) return;
     form.setFieldsValue({
@@ -31,7 +35,7 @@ const EditInfo = () => {
     });
   }, [store]);
 
-  const onClickHandler = async (v: IStudent & { avatar: [{ url:string }] }) => {
+  const onClickHandler = async (v: IStudent & { avatar: [{ url: string }] }) => {
     const res = await commit(
       {
         variables: {
@@ -43,16 +47,17 @@ const EditInfo = () => {
       },
     );
     if (res.data.commitStudentInfo.code === 200) {
-      showSuccess(res.data.commitStudentInfo.message);
+      showSuccess(locale === 'en' ? 'Update successfully' : res.data.commitStudentInfo.message);
       return;
     }
-    showFail(res.data.commitStudentInfo.message);
+    showFail(locale === 'en' ? 'Update failed' : res.data.commitStudentInfo.message);
   };
 
   return (
     <div className={style.container}>
       <div className={style.logo}>
-        <img src="https://water-drop-assets.oss-cn-hangzhou.aliyuncs.com/images/henglogo.png" alt="" />
+        {/* <Image src="https://water-drop-gan.oss-cn-hongkong.aliyuncs.com/images/font2.png" className={style.font} /> */}
+        <Image src="https://water-drop-gan.oss-cn-hongkong.aliyuncs.com/images/read2.png" className={style.themePic} />
       </div>
       <Form
         form={form}
@@ -60,14 +65,14 @@ const EditInfo = () => {
         onFinish={onClickHandler}
         footer={(
           <Button block type="submit" color="primary" size="large">
-            提交
+            {t('submit')}
           </Button>
-      )}
+        )}
       >
-        <Form.Header>请提交个人信息，都是必填的</Form.Header>
+        <Form.Header>{t('submitInfo')}</Form.Header>
         <Form.Item
           name="name"
-          label="昵称"
+          label={t('nickName')}
           rules={[
             {
               required: true,
@@ -78,7 +83,7 @@ const EditInfo = () => {
         </Form.Item>
         <Form.Item
           name="tel"
-          label="手机号"
+          label={t('phoneNum')}
           rules={[
             {
               required: true,
@@ -89,7 +94,7 @@ const EditInfo = () => {
         </Form.Item>
         <Form.Item
           name="avatar"
-          label="头像"
+          label={t('avatar')}
           rules={[
             {
               required: true,

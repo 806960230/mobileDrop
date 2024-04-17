@@ -2,6 +2,7 @@ import { IProduct } from '@/utils/types';
 import { Grid } from 'antd-mobile';
 import { PhoneFill } from 'antd-mobile-icons';
 import { useGoTo } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 import { ROUTE_KEY } from '@/routes/menus';
 import style from './index.module.less';
 
@@ -15,6 +16,7 @@ const BuyBottom = ({
   data,
 }: IProps) => {
   const { go } = useGoTo();
+  const { t } = useTranslation();
   const goBuy = () => {
     go(ROUTE_KEY.BUY, {
       id: data.id,
@@ -42,7 +44,7 @@ const BuyBottom = ({
         className={style.buyButton}
         onClick={goBuy}
       >
-        立即抢购
+        {t('buyNow')}
       </Grid.Item>
     </Grid>
   );

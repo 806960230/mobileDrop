@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import {
   GET_PRODUCT, GET_PRODUCTS, GET_PRODUCTS_BY_ORG_ID, GET_PRODUCT_TYPES,
 } from '@/graphql/product';
@@ -48,7 +49,7 @@ export const useProducts = (
   const init = async (pageNum = 1) => {
     const toast = Toast.show({
       icon: 'loading',
-      content: '加载中…',
+      content: i18next.t('loading'),
     });
     const {
       latitude,

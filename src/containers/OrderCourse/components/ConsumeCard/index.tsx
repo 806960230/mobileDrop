@@ -1,4 +1,5 @@
 import { ICardRecord } from '@/utils/types';
+import { useTranslation } from 'react-i18next';
 import { CARD_TYPE, DAY_FORMAT } from '@/utils/constants';
 import { Space, Tag } from 'antd-mobile';
 import dayjs from 'dayjs';
@@ -12,47 +13,49 @@ interface IProps {
 */
 const ConsumeCard = ({
   dataSource,
-}: IProps) => (
-  <div className={style.container}>
-    <Space justify="between" block>
-      <span>
-        {dataSource.card.type === CARD_TYPE.TIME[0]
-          && (
-          <Tag
-            color="primary"
-            fill="outline"
-          >
-            {CARD_TYPE.TIME[1]}
-          </Tag>
-          )}
-        {dataSource.card.type === CARD_TYPE.DURATION[0]
-          && (
-          <Tag
-            color="warning"
-            fill="outline"
-          >
-            {CARD_TYPE.DURATION[1]}
-          </Tag>
-          )}
-        <span className={style.name}>
-          {dataSource.card.name}
-        </span>
-      </span>
-      <span>
-        有效期至：
-        {dayjs(dataSource.endTime).format(DAY_FORMAT)}
-      </span>
-    </Space>
-    {dataSource.card.type === CARD_TYPE.TIME[0] && (
-      <Space justify="between" block className={style.residueTime}>
+}: IProps) => {
+  const { t } = useTranslation();
+  return (
+    <div className={style.container}>
+      <Space justify="between" block>
         <span>
-          剩余
-          {dataSource.residueTime}
-          次
+          {dataSource.card.type === CARD_TYPE.TIME[0]
+            && (
+            <Tag
+              color="primary"
+              fill="outline"
+            >
+              {CARD_TYPE.TIME[1]}
+            </Tag>
+            )}
+          {dataSource.card.type === CARD_TYPE.DURATION[0]
+            && (
+            <Tag
+              color="warning"
+              fill="outline"
+            >
+              {CARD_TYPE.DURATION[1]}
+            </Tag>
+            )}
+          <span className={style.name}>
+            {dataSource.card.name}
+          </span>
+        </span>
+        <span>
+          {t('validity')}
+          {dayjs(dataSource.endTime).format(DAY_FORMAT)}
         </span>
       </Space>
-    )}
-  </div>
-);
-
+      {dataSource.card.type === CARD_TYPE.TIME[0] && (
+        <Space justify="between" block className={style.residueTime}>
+          <span>
+            {t('remaining')}
+            {dataSource.residueTime}
+            {t('times')}
+          </span>
+        </Space>
+      )}
+    </div>
+  );
+};
 export default ConsumeCard;

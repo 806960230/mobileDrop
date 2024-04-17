@@ -1,6 +1,7 @@
 import { TCourse } from '@/utils/types';
 import { Card } from 'antd-mobile';
 import Hr from '@/components/Hr';
+import { useTranslation } from 'react-i18next';
 import style from './index.module.less';
 
 interface IProps {
@@ -12,31 +13,34 @@ interface IProps {
 */
 const CourseInfo = ({
   data,
-}: IProps) => (
-  <div className={style.container}>
-    {data?.map((item) => (
-      <Card title={item.cardName} key={item.id} className={style.courseCard}>
-        <div className={style.contentItem}>
-          {item.desc}
-        </div>
-        <Hr />
-        <div className={style.contentItem}>
-          <div className={style.label}>预约信息</div>
-          {item.reserveInfo}
-        </div>
-        <Hr />
-        <div className={style.contentItem}>
-          <div className={style.label}>退款信息</div>
-          {item.refundInfo}
-        </div>
-        <Hr />
-        <div className={style.contentItem}>
-          <div className={style.label}>其他信息</div>
-          {item.otherInfo}
-        </div>
-      </Card>
-    ))}
-  </div>
-);
+}: IProps) => {
+  const { t } = useTranslation();
+  return (
+    <div className={style.container}>
+      {data?.map((item) => (
+        <Card title={item.cardName} key={item.id} className={style.courseCard}>
+          <div className={style.contentItem}>
+            {item.desc}
+          </div>
+          <Hr />
+          <div className={style.contentItem}>
+            <div className={style.label}>{t('reserveInfo')}</div>
+            {item.reserveInfo}
+          </div>
+          <Hr />
+          <div className={style.contentItem}>
+            <div className={style.label}>{t('refundInfo')}</div>
+            {item.refundInfo}
+          </div>
+          <Hr />
+          <div className={style.contentItem}>
+            <div className={style.label}>{t('otherInfo')}</div>
+            {item.otherInfo}
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+};
 
 export default CourseInfo;

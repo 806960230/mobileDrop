@@ -1,10 +1,11 @@
 import {
   Button,
   Card,
-  DotLoading, Grid, Image, Modal, Space, Steps, Tag, Toast,
+  DotLoading, Grid, Image, Modal, Result, Space, Steps, Tag, Toast,
 } from 'antd-mobile';
 import { useCancelSubscribeCourse, useScheduleRecords } from '@/services/schedule';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { DAY_FORMAT, SCHEDULE_STATUS } from '@/utils/constants';
 import { useGoTo } from '@/hooks';
 import { ROUTE_KEY } from '@/routes/menus';
@@ -18,15 +19,23 @@ const { Step } = Steps;
 const MyCourse = () => {
   const { data, loading, refetch } = useScheduleRecords();
   const { cancel, loading: cancelLoading } = useCancelSubscribeCourse();
+  const { t } = useTranslation();
   const { go } = useGoTo();
-
+  if (!data || data.length === 0) {
+    return (
+      <Result
+        status="warning"
+        title={t('noSchedules')}
+      />
+    );
+  }
   if (loading) {
     return <DotLoading />;
   }
   // 取消预约的课程，必须是未开始的课程才能取消
   const cancelSubscribeHandler = async (id: string) => {
     const result = await Modal.confirm({
-      content: '确定要取消预约吗？一旦取消不能重复预约了！',
+      content: t('sureCancel'),
     });
     if (result) {
       const res = await cancel(id);
@@ -93,7 +102,8 @@ const MyCourse = () => {
                       {item.course.name}
                     </div>
                     <div className={style.teacher}>
-                      老师：
+                      {t('teacher')}
+                      :
                       {item.schedule.teacher?.name}
                     </div>
                   </Grid.Item>
@@ -106,7 +116,7 @@ const MyCourse = () => {
                        loading={cancelLoading}
                        onClick={() => cancelSubscribeHandler(item.id)}
                      >
-                       取消
+                       {t('cancel')}
                      </Button>
                      )}
                   </Grid.Item>

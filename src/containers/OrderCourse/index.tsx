@@ -3,6 +3,7 @@ import {
 } from 'antd-mobile';
 import { useCanSubscribeCourses } from '@/services/schedule';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CourseList from './components/CourseList';
 import style from './index.module.less';
 import SubscribePopup from './components/SubscribePopup';
@@ -16,6 +17,7 @@ const OrderCourse = () => {
   const [curCourse, setCurCourse] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const { data, loading } = useCanSubscribeCourses();
+  const { t } = useTranslation();
   if (loading) {
     return (
       <Space justify="center">
@@ -27,7 +29,7 @@ const OrderCourse = () => {
     return (
       <Result
         status="warning"
-        title="没有可以约的课程"
+        title={t('noCourses')}
       />
     );
   }
@@ -60,7 +62,7 @@ const OrderCourse = () => {
               <img
                 className={style.logo}
                 src={item.logo}
-                alt="门店logo"
+                alt={t('storeLogo')}
               />
             )}
           />

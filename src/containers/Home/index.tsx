@@ -1,9 +1,10 @@
 import { SearchBar } from 'antd-mobile';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { DataContext } from '@/context';
+import { useTranslation } from 'react-i18next';
 import TypeSelect from './components/TypeSelect';
-
-import style from './index.module.less';
 import ProductList from './components/ProductList';
+import style from './index.module.less';
 
 /**
 * 精选课程
@@ -11,7 +12,10 @@ import ProductList from './components/ProductList';
 const Home = () => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
-
+  const { t } = useTranslation();
+  const { locale } = useContext(DataContext);
+  useEffect(() => {
+  }, [locale]);
   const onSearchHandler = (val: string) => {
     setName(val);
   };
@@ -23,10 +27,10 @@ const Home = () => {
   return (
     <div className={style.container}>
       <SearchBar
-        placeholder="搜索课程试试"
+        placeholder={t('trySearch')}
         onSearch={onSearchHandler}
       />
-      <TypeSelect onChange={onTypeChangeHandler} />
+      <TypeSelect onChange={onTypeChangeHandler} locale={locale || 'en'} />
       <ProductList name={name} type={type} />
     </div>
   );

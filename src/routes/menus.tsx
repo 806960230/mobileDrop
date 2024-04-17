@@ -71,6 +71,56 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
   },
 };
 
-export const routes = Object.keys(ROUTE_CONFIG).map((key) => ({ ...ROUTE_CONFIG[key], key }));
+export const ROUTE_CONFIGEN: Record<string, IRoute> = {
+  [ROUTE_KEY.HOME]: {
+    path: '',
+    name: 'Premium courses',
+    isMenu: true,
+    icon: courseSvg,
+  },
+  [ROUTE_KEY.MY]: {
+    path: 'my',
+    name: 'My Info',
+    isMenu: true,
+    icon: mySvg,
+  },
+  [ROUTE_KEY.EDIT_INFO]: {
+    path: 'editInfo',
+    name: 'Edit My Info',
+    isMenu: false,
+  },
+  [ROUTE_KEY.ORG_INFO]: {
+    path: 'orgInfo/:id',
+    name: 'Store Detail',
+    isMenu: false,
+  },
+  [ROUTE_KEY.PRODUCT_INFO]: {
+    path: 'productInfo/:id',
+    name: 'Product Detail',
+    isMenu: false,
+  },
+  [ROUTE_KEY.BUY]: {
+    path: 'buy/:id',
+    name: 'Purchase Information',
+    isMenu: false,
+  },
+  [ROUTE_KEY.MY_COURSE]: {
+    path: 'myCourse',
+    name: 'My Schedules',
+    isMenu: false,
+  },
+  [ROUTE_KEY.MY_CARD]: {
+    path: 'myCard',
+    name: 'My Consumer Cards',
+    isMenu: false,
+  },
+  [ROUTE_KEY.ORDER_COURSE]: {
+    path: 'orderCourse',
+    name: 'Reserve Courses',
+    isMenu: false,
+  },
+};
 
+export const routes = Object.keys(ROUTE_CONFIG).map((key) => ({ ...ROUTE_CONFIG[key], key }));
+export const routesEn = Object.keys(ROUTE_CONFIGEN).map((key) => ({ ...ROUTE_CONFIGEN[key], key }));
 export const getRouteByKey = (key: string) => ROUTE_CONFIG[key];

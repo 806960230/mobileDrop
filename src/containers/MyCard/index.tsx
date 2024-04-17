@@ -1,7 +1,8 @@
 import { useCards } from '@/services/card';
 import { BankcardOutline } from 'antd-mobile-icons';
-import { Space, Tag } from 'antd-mobile';
+import { Result, Space, Tag } from 'antd-mobile';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { CARD_STATUS, CARD_TYPE, DAY_FORMAT } from '@/utils/constants';
 import classNames from 'classnames';
 import style from './index.module.less';
@@ -11,6 +12,15 @@ import style from './index.module.less';
 */
 const MyCard = () => {
   const { data } = useCards();
+  const { t } = useTranslation();
+  if (!data || data.length === 0) {
+    return (
+      <Result
+        status="warning"
+        title={t('noCards')}
+      />
+    );
+  }
   return (
     <div className={style.container}>
       {
@@ -34,7 +44,8 @@ const MyCard = () => {
               item.card.type === CARD_TYPE.TIME[0] && (
                 <Tag color="#fff" fill="outline">
                   {CARD_TYPE.TIME[1]}
-                  (余
+                  (
+                  {t('remaining')}
                   {item.residueTime}
                   )
                 </Tag>
@@ -42,7 +53,7 @@ const MyCard = () => {
             }
             {
               item.card.type === CARD_TYPE.DURATION[0] && (
-                <Tag color="warning" fill="outline">
+                <Tag color="" fill="outline">
                   {CARD_TYPE.DURATION[1]}
                 </Tag>
               )
@@ -51,7 +62,7 @@ const MyCard = () => {
           <Space justify="between" className={style.bottom}>
             <span>{item.org.name}</span>
             <span>
-              有效期到：
+              {t('validity')}
               {dayjs(item.endTime).format(DAY_FORMAT)}
             </span>
           </Space>

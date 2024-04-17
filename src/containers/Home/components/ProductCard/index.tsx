@@ -2,6 +2,7 @@ import { Image } from 'antd-mobile';
 import { IProduct } from '@/utils/types';
 import { useGoTo } from '@/hooks';
 import { ROUTE_KEY } from '@/routes/menus';
+import { useTranslation } from 'react-i18next';
 import style from './index.module.less';
 
 interface IProps {
@@ -15,6 +16,7 @@ const ProductCard = ({
   data,
 }: IProps) => {
   const { go } = useGoTo();
+  const { t } = useTranslation();
   const goOrgInfo = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     go(ROUTE_KEY.ORG_INFO, {
@@ -39,7 +41,7 @@ const ProductCard = ({
             {data.org.name}
           </span>
           <span className={style.distance}>
-            {data.distance || '未知'}
+            {data.distance || t('unknown')}
           </span>
         </div>
         <div className={style.price}>

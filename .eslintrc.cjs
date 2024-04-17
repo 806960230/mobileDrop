@@ -13,7 +13,8 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
-    'linebreak-style': ["off", "windows"]
+    'linebreak-style': ["off", "windows"],
+    'react/jsx-no-constructed-context-values': 0
   },
   parser: require.resolve('@typescript-eslint/parser'),
   parserOptions: {

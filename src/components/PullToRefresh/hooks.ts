@@ -17,6 +17,13 @@ export const TIPS = {
   [STATUS.SUCCESS]: '刷新成功',
 };
 
+export const TIPSEN = {
+  [STATUS.START]: 'Begin pull to refresh',
+  [STATUS.AWAIT]: 'Release to refresh immediately',
+  [STATUS.LOADING]: 'Refreshing',
+  [STATUS.SUCCESS]: 'Refresh successful',
+};
+
 export const usePullToRefresh = (onRefresh: () => void) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState(STATUS.FINISH);

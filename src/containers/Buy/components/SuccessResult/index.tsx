@@ -2,6 +2,7 @@ import { useGoTo } from '@/hooks';
 import { ROUTE_KEY } from '@/routes/menus';
 import { Card, ResultPage } from 'antd-mobile';
 import { AlipayCircleFill } from 'antd-mobile-icons';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   price: number;
@@ -17,7 +18,7 @@ const SuccessResult = ({
   productDesc,
 }: IProps) => {
   const { go } = useGoTo();
-
+  const { t } = useTranslation();
   return (
     <ResultPage
       status="success"
@@ -41,7 +42,7 @@ const SuccessResult = ({
       onPrimaryButtonClick={() => {
         go(ROUTE_KEY.HOME);
       }}
-      primaryButtonText="返回首页"
+      primaryButtonText={t('back')}
     >
       <Card title={productName}>
         {productDesc}

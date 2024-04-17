@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import i18next from 'i18next';
 import { onError } from '@apollo/client/link/error'; // 引入onError
 import { Toast } from 'antd-mobile';
 import { AUTH_TOKEN } from './constants';
@@ -26,13 +27,13 @@ const errorLink = onError(({
 }) => {
   if (graphQLErrors) {
     Toast.show({
-      content: '请求参数或者返回的数据格式不对',
+      content: i18next.t('requestError'),
     });
     graphQLErrors.forEach((item) => {
       if (item.message === 'Unauthorized') {
         Toast.clear();
         Toast.show({
-          content: '登录失效，请登录',
+          content: i18next.t('logError'),
         });
       }
     });

@@ -1,7 +1,8 @@
 import { matchPath, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
+import { DataContext } from '@/context';
 import {
-  getRouteByKey, routes,
+  getRouteByKey, routes, routesEn,
 } from '@/routes/menus';
 
 export const useTitle = (title: string | undefined) => {
@@ -43,8 +44,9 @@ export const useGoTo = () => {
  * 获取当前 URL 匹配的路由
  */
 export const useMatchedRoute = () => {
+  const { locale } = useContext(DataContext);
   const r = useLocation();
-  const route = useMemo(() => routes.find(
+  const route = useMemo(() => (locale === 'en' ? routesEn : routes).find(
     (item) => matchPath(`/${item.path}`, r.pathname),
   ), [r.pathname]);
   return route;
